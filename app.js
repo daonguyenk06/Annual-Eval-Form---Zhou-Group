@@ -9,5 +9,5 @@ document.addEventListener("DOMContentLoaded", function () {
     // Test database operation
     const testDB = ref(database, "users/user1");
     
-  });
+});
   

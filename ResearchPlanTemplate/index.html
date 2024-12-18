@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Research Plan Template for Materials Science Research</title>
+</head>
+<body>
+    <form>
+        <h1>Researcher Information</h1>
+        
+        <label for="name">Name:</label>
+        <select id="name" name="name">
+            <option value="">-- Select Name --</option>
+            <option value="researcher1">Researcher 1</option>
+            <option value="researcher2">Researcher 2</option>
+        </select>
+
+        <label for="position">Position (Undergrad, Grad, Postdoc):</label>
+        <select id="position" name="position">
+            <option value="">-- Select Position --</option>
+            <option value="undergrad">Undergrad</option>
+            <option value="grad">Grad</option>
+            <option value="postdoc">Postdoc</option>
+        </select>
+
+        <label for="advisor">Advisor/Supervisor:</label>
+        <input type="text" id="advisor" name="advisor" placeholder="Enter Advisor/Supervisor Name">
+
+        <label for="project-title">Project Title:</label>
+        <input type="text" id="project-title" name="project-title" placeholder="Enter Project Title">
+
+        <label for="start-date">Start Date:</label>
+        <input type="text" id="start-date" name="start-date" placeholder="MM/DD/YYYY">
+
+        <label for="completion-date">Expected Completion Date:</label>
+        <input type="text" id="completion-date" name="completion-date" placeholder="MM/DD/YYYY"><br>
+
+        <button type="button">Next</button>
+    </form>
+
+    <div id="form-container"></div>
+
+    <script type="module" src="./app.js"></script>
+</body>
+</html>
