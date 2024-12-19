@@ -6,20 +6,18 @@
     <link rel="stylesheet" href="style.css">
     <title>Research Plan Template for Materials Science Research</title>
 </head>
-<body>
-    <form>
-        <h1>Researcher Information</h1>
+<body id="tbody">
+    <form id="researcher-info-form">
+        <h2>Researcher Information</h2>
         
         <label for="name">Name:</label>
         <select id="name" name="name">
-            <option value="">-- Select Name --</option>
-            <option value="researcher1">Researcher 1</option>
-            <option value="researcher2">Researcher 2</option>
+            <option value=null>-- Select Name --</option>
         </select>
 
         <label for="position">Position (Undergrad, Grad, Postdoc):</label>
         <select id="position" name="position">
-            <option value="">-- Select Position --</option>
+            <option value=null>-- Select Position --</option>
             <option value="undergrad">Undergrad</option>
             <option value="grad">Grad</option>
             <option value="postdoc">Postdoc</option>
@@ -40,7 +38,9 @@
         <button type="button">Next</button>
     </form>
 
-    <div id="form-container"></div>
+    <div id="form-div" style="display: none;">
+        <button id="backButton">Back</button>
+    </div>
 
     <script type="module" src="./app.js"></script>
 </body>
