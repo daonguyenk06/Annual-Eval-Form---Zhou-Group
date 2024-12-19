@@ -7,6 +7,38 @@
     <title>Annual Evaluation Form for Zhou Group</title>
 </head>
 <body>
+    <form id="researcher-info-form">
+        <h2>Researcher Information</h2>
+        
+        <label for="name">Name:</label>
+        <select id="name" name="name">
+            <option value=null>-- Select Name --</option>
+        </select>
+
+        <label for="position">Position (Undergrad, Grad, Postdoc):</label>
+        <select id="position" name="position">
+            <option value=null>-- Select Position --</option>
+            <option value="undergrad">Undergrad</option>
+            <option value="grad">Grad</option>
+            <option value="postdoc">Postdoc</option>
+        </select>
+
+        <label for="project-title">Project Title:</label>
+        <input type="text" id="project-title" name="project-title" placeholder="Enter Project Title">
+
+        <label for="advisor">Lab Supervisor:</label>
+        <input type="text" id="advisor" name="advisor" placeholder="Enter Lab Advisor Name">
+
+        <label for="evaluation-date">Date of Evaluation:</label>
+        <input type="text" id="evaluation-date" name="evaluation-date" placeholder="MM/DD/YYYY">
+
+        <button type="button">Next</button>
+    </form>
+
+    <div id="form-div" style="display: none;">
+        <button id="backButton">Back</button>
+    </div>
     
+    <script type="module" src="app.js"></script>
 </body>
 </html>

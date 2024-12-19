@@ -543,6 +543,7 @@ export function createForm(prompts, html_el) {
             subsectionTitle.textContent = prompts[i].subsectionTitle;
             subsectionTitle.id = `_${sectionKey}.${subsectionKey}`;;
             html_el.appendChild(subsectionTitle);
+            
         }else if (i > 0 && prompts[i].sectionTitle != prompts[i - 1].sectionTitle) {
             const sectionTitle = document.createElement("h2");
             sectionTitle.textContent = prompts[i].sectionTitle;
@@ -553,6 +554,7 @@ export function createForm(prompts, html_el) {
             subsectionTitle.textContent = prompts[i].subsectionTitle;
             subsectionTitle.id = `_${sectionKey}.${subsectionKey}`;;
             html_el.appendChild(subsectionTitle);
+
         }else if (i > 0 && prompts[i].subsectionTitle != prompts[i - 1].subsectionTitle) {
             const subsectionTitle = document.createElement("h3");
             subsectionTitle.textContent = prompts[i].subsectionTitle;

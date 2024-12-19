@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
             newOption.textContent = usersList[i].name; 
             newOption.value = usersList[i].name;
             newOption.id = 'name_' + i;
-            nameInput.appendChild(newOption)
+            nameInput.appendChild(newOption);
         }
     });
 
