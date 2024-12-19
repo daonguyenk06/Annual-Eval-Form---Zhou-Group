@@ -1,0 +1,125 @@
+/* General Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+#tbody, #researcher-info-form {
+    transition: opacity 0.5s ease;
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Form Container */
+form {
+    max-width: 700px;
+    margin: 20px auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Titles */
+h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 8px;
+}
+
+h5 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #4a4a4a;
+    margin-bottom: 5px;
+}
+
+/* Labels */
+label {
+    display: block;
+    margin-top: 15px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #4a4a4a;
+}
+
+/* Inputs and Textareas */
+select, input[type="text"], textarea {
+    width: 100%; /* Ensures uniform width for all inputs */
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: none;
+    height: auto; /* Uses 'rows' attribute for height */
+}
+
+/* Buttons */
+button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Form Grouping for Spacing */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        margin: 10px;
+    }
+
+    form {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    h3 {
+        font-size: 1.3rem;
+    }
+
+    h5 {
+        font-size: 1.1rem;
+    }
+
+    button {
+        width: 100%;
+    }
+}
