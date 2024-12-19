@@ -1067,15 +1067,18 @@ export let evaluation_form_layout = {
     section_21: {
         title: "Additional Comments (Weight: 0 points):",
         subsections: {
-            title: "Additional Comments",
-            prompts: {
-                0: {
-                    prompt: "Is there anything else you would like to share about your experience in the lab or any feedback you have for the lab or your supervisor?",
-                    type_of_inputs: inputTypes.textarea,
-                    row: 5,
-                    col: 80
+            subsection_0: {
+                title: "Additional Comments",
+                prompts: {
+                    0: {
+                        prompt: "Is there anything else you would like to share about your experience in the lab or any feedback you have for the lab or your supervisor?",
+                        type_of_inputs: inputTypes.textarea,
+                        row: 5,
+                        col: 80
+                    }
                 }
             }
+            
         }
         
     }
