@@ -527,44 +527,52 @@ export function createForm(prompts, html_el) {
 
     for (let i = 0; i < prompts.length; i++) {
 
+        // Get keys for prompt
+        const sectionKey = prompts[i].sectionKey.slice(-1)
+        const subsectionKey = prompts[i].subsectionKey.slice(-1)
+        const promptKey = prompts[i].promptKey
+
         //Create title and subtitle
         if (i == 0) {
             const sectionTitle = document.createElement("h2");
             sectionTitle.textContent = prompts[i].sectionTitle;
+            sectionTitle.id = prompts[i].sectionKey;
             html_el.appendChild(sectionTitle);
 
             const subsectionTitle = document.createElement("h3");
             subsectionTitle.textContent = prompts[i].subsectionTitle;
+            subsectionTitle.id = `_${sectionKey}.${subsectionKey}`;;
             html_el.appendChild(subsectionTitle);
         }else if (i > 0 && prompts[i].sectionTitle != prompts[i - 1].sectionTitle) {
             const sectionTitle = document.createElement("h2");
             sectionTitle.textContent = prompts[i].sectionTitle;
+            sectionTitle.id = prompts[i].sectionKey;
             html_el.appendChild(sectionTitle);
 
             const subsectionTitle = document.createElement("h3");
             subsectionTitle.textContent = prompts[i].subsectionTitle;
+            subsectionTitle.id = `_${sectionKey}.${subsectionKey}`;;
             html_el.appendChild(subsectionTitle);
         }else if (i > 0 && prompts[i].subsectionTitle != prompts[i - 1].subsectionTitle) {
             const subsectionTitle = document.createElement("h3");
             subsectionTitle.textContent = prompts[i].subsectionTitle;
+            subsectionTitle.id = `_${sectionKey}.${subsectionKey}`;;
             html_el.appendChild(subsectionTitle);        
         }
 
         //Handle textarea input types
         if (prompts[i].type_of_inputs == 'textarea') {
+            //Create prompt
             const prompt = document.createElement("h5");
             prompt.textContent = prompts[i].prompt;
+            prompt.id = `prompt_${sectionKey}.${subsectionKey}.${promptKey}`;
 
-            const textarea = document.createElement('textarea'); //Create textarea
-            textarea.rows = prompts[i].row; // Set the number of rows
-            textarea.cols = prompts[i].col; // Set the number of columns
+            //Create textarea
+            const textarea = document.createElement('textarea');
+            textarea.rows = prompts[i].row;
+            textarea.cols = prompts[i].col;
+            textarea.id =  `input_${sectionKey}.${subsectionKey}.${promptKey}`
 
-            // Get keys for prompt
-            const sectionKey = prompts[i].sectionKey.slice(-1)
-            const subsectionKey = prompts[i].subsectionKey.slice(-1)
-            const promptKey = prompts[i].promptKey
-
-            textarea.id =  `${sectionKey}.${subsectionKey}.${promptKey}`// Set input id
             html_el.appendChild(prompt);
             html_el.appendChild(textarea);
         }
@@ -572,7 +580,6 @@ export function createForm(prompts, html_el) {
 
     //Create submit button
     const submitButton = document.createElement('button');
-    submitButton.type = 'submit';
     submitButton.id = 'submitButton';
     submitButton.textContent = 'Submit';
     html_el.appendChild(submitButton);
