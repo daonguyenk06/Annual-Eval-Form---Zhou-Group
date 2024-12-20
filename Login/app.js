@@ -132,7 +132,7 @@ function login(permission) {
     localStorage.setItem('permission', permission);
     console.log(localStorage.getItem('name'));
     console.log(localStorage.getItem('permission'));
-    // history.back();
+    history.back();
 }
 
 
