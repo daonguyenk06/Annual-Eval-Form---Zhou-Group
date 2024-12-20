@@ -6,8 +6,7 @@ import { getDatabase, ref, push, onValue, update, set, remove, child} from "http
 document.addEventListener("DOMContentLoaded", function () {
     console.log("DOM fully loaded and parsed.");
   
-    // Test database operation
-    const testDB = ref(database, "users/user1");
+
     
 });
   
