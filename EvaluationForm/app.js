@@ -204,8 +204,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 onValue(submissionDataRef, function(snapshot) {
                     console.log("Raw responses:", snapshot.val()?.responses);
                     const userInfo = snapshot.val()?.info;
-                    const responsesRaw = snapshot.val()?.responses;
-                    const userResponses = flattenArray(responsesRaw);
                     // console.log('userResponses: ' + userResponses);
     
                     // Loop through the keys and values of the data
@@ -235,7 +233,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 const submissionDataRef = ref(database, `users/${key}/submissions/evaluationForm`);
                 onValue(submissionDataRef, function(snapshot) {
                     console.log("Raw responses:", snapshot.val()?.responses);
-                    const userInfo = snapshot.val()?.info;
                     const responsesRaw = snapshot.val()?.responses;
                     const userResponses = flattenArray(responsesRaw);
                     console.log(userResponses);
