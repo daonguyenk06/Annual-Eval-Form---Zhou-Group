@@ -45,30 +45,35 @@ header .login-link:hover {
 /* Form and Display Containers */
 #form-container {
     margin: auto; /* Center the form container */
-    padding: 20px;
-    max-width: 800px;
+    padding: 30px;
+    max-width: 600px;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     display: block; /* Ensure the form container is visible by default */
 }
 
 #display-container {
     margin: 20px auto;
-    padding: 20px;
+    padding: 30px;
     max-width: 800px;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     display: none; /* Ensure the display container is hidden by default */
 }
 
 /* Form Elements */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
 label {
     font-size: 1rem;
     font-weight: bold;
-    margin-bottom: 10px;
-    display: block;
+    margin-bottom: 5px;
     color: #333;
 }
 
@@ -76,12 +81,12 @@ select, input, textarea, button {
     width: 100%;
     max-width: 400px;
     padding: 10px;
-    margin-top: 5px;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
     background-color: #f9f9f9;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 textarea {
@@ -104,6 +109,7 @@ button {
     font-size: 1rem;
     padding: 10px 20px;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    align-self: flex-start;
 }
 
 button:hover {
@@ -112,10 +118,15 @@ button:hover {
 }
 
 /* Display Data Styling */
-#display-container p {
+.response-box, #display-container p {
     font-size: 1rem;
     color: #333;
     margin: 10px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Footer Styling */
