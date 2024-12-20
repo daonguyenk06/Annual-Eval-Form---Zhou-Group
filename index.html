@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>End-of-Year Evaluation</title>
+    <title>Home Page</title>
     <style>
         /* General Styling */
         body {
@@ -13,16 +13,9 @@
             padding: 0;
             background-color: #f0f4f8;
             color: #333;
-        }
-
-        /* Centered Container */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* Header Styling */
@@ -33,16 +26,19 @@
             padding: 20px;
             background-color: #4CAF50;
             color: white;
-            border-bottom: 5px solid #45a049;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 2.2rem;
+        /* Welcome and Login Containers */
+        .welcome-container {
+            font-size: 1.5rem;
             font-weight: bold;
         }
 
-        header #login-link {
+        .login-container {
+            text-align: right;
+        }
+
+        .login-container a {
             font-size: 1rem;
             font-weight: 500;
             color: white;
@@ -53,7 +49,7 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        header .login-link:hover {
+        .login-container a:hover {
             background-color: white;
             color: #4CAF50;
         }
@@ -61,95 +57,23 @@
         /* Navigation Bar */
         nav#main-menu {
             text-align: center;
-            background-color: #34495e;
-            padding: 10px 0;
+            padding: 20px;
+            background-color: #ffffff;
+            flex-grow: 1; /* Push the footer to the bottom */
         }
 
-        nav#main-menu ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav#main-menu ul li {
-            display: inline;
-            margin: 0 15px;
-        }
-
-        nav#main-menu ul li a {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        nav#main-menu ul li a:hover {
+        nav#main-menu a {
+            display: block; /* Ensure links are on separate lines */
+            margin: 10px 0;
             color: #4CAF50;
-        }
-
-        /* Form Styling */
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        form h2, form h3, form h5 {
-            margin: 0;
-            text-align: left;
-            color: #2c3e50;
-        }
-
-        form h2 {
-            font-size: 1.8rem;
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 5px;
-        }
-
-        form h3 {
-            font-size: 1.4rem;
-            margin-top: 10px;
-            color: #34495e;
-        }
-
-        form h5 {
+            text-decoration: none;
             font-size: 1.2rem;
-            color: #4a4a4a;
+            font-weight: bold;
+            transition: color 0.3s ease;
         }
 
-        /* Inputs and Textareas */
-        select, input[type="text"], textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-            box-sizing: border-box;
-            margin-top: 5px;
-            background-color: #f9f9f9;
-        }
-
-        textarea {
-            resize: none;
-            min-height: 120px;
-        }
-
-        /* Buttons */
-        button {
-            padding: 12px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            text-align: center;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #45a049;
+        nav#main-menu a:hover {
+            color: #2c3e50;
         }
 
         /* Footer Styling */
@@ -158,7 +82,7 @@
             padding: 10px 0;
             background-color: #34495e;
             color: white;
-            position: relative;
+            position: sticky;
             bottom: 0;
             width: 100%;
         }
@@ -170,44 +94,36 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-
             header {
                 flex-direction: column;
                 text-align: center;
             }
 
-            header .login-link {
-                margin-top: 10px;
+            .welcome-container {
+                margin-bottom: 10px;
             }
 
-            nav#main-menu ul li {
-                display: block;
-                margin: 10px 0;
-            }
-
-            button {
-                width: 100%;
+            .login-container {
+                text-align: center;
             }
         }
-
     </style>
 </head>
 <body>
     <header>
-        <h1 id="welcome-user">Welcome, User</h1>
-        <a href="/Login/index.html" id="login-link">Login</a>
+        <div class="welcome-container" id="welcome-line">Welcome!</div>
+        <div class="login-container">
+            <a href="/Login/index.html" id="login-link">Login</a>
+        </div>
     </header>
     <nav id="main-menu">
-        <ul>
-            <li><a href="/EvaluationForm/index.html">Annual Evaluation Form</a></li>
-            <li><a href="/ResearchPlanTemplate/index.html">Research Plan Template for Materials Science Research</a></li>
-        </ul>
+        <a href="/EvaluationForm/index.html">Annual Evaluation Form</a>
+        <a href="/ResearchPlanTemplate/index.html">Research Plan Template for Materials Science Research</a>
     </nav>
     <footer>
-        <p>&copy; 2024 Zhou Group Evaluations</p>
+        <p>&copy; 2024 Zhou Group Annual Evaluations</p>
     </footer>
+
+    <script type="module" src="app.js"></script>
 </body>
 </html>

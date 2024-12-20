@@ -15,9 +15,11 @@ const nameInput = document.getElementById("name");
 const passwordClass = document.querySelectorAll('.password');
 const passInput = document.getElementById("loginPassword");
 
-
 //**By wrapping the code inside the DOMContentLoaded event listener, you ensure that the code will only run when the DOM is ready.
 document.addEventListener("DOMContentLoaded", function() {
+
+console.log("Name: " + localStorage.getItem('name'));
+console.log("Permission Level: " + localStorage.getItem('permission'));
 
 //List users
 onValue(usersRef, function(snapshot) {
