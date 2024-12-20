@@ -104,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     submitButton.addEventListener('click', function () {
+        // Gather researcher info
         const userInfo = {
             name: nameInput.value,
             position: positionInput.value,
