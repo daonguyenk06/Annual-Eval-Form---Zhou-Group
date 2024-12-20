@@ -63,8 +63,10 @@ document.addEventListener("DOMContentLoaded", function () {
             if (key) {
                 const submissionDataRef = ref(database, `users/${key}/submissions/researchPlan`);
                 onValue(submissionDataRef, function(snapshot) {
+                    console.log("Raw responses:", snapshot.val()?.responses);
                     const userInfo = snapshot.val()?.info;
-                    const userResponses = flattenArray(snapshot.val()?.responses);
+                    const responsesRaw = snapshot.val()?.responses;
+                    const userResponses = flattenArray(responsesRaw);
                     console.log(userResponses);
     
                     // Clear any existing content in the container
@@ -120,52 +122,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function generateResponses(array, html_el) {
         for (let i = 0; i < array.length; i++) {
-            // Get keys for prompt
-            const sectionKey = array[i].sectionKey.slice(-1);
-            const subsectionKey = array[i].subsectionKey.slice(-1);
-            const promptKey = array[i].promptKey;
-    
-            // Create title and subtitle
-            if (i == 0) {
+            // Create titles
+            if (i === 0 || array[i].sectionTitle !== array[i - 1]?.sectionTitle) {
                 const sectionTitle = document.createElement("h2");
                 sectionTitle.textContent = array[i].sectionTitle;
-                sectionTitle.id = array[i].sectionKey;
                 html_el.appendChild(sectionTitle);
+            }
     
+            if (i === 0 || array[i].subsectionTitle !== array[i - 1]?.subsectionTitle) {
                 const subsectionTitle = document.createElement("h3");
                 subsectionTitle.textContent = array[i].subsectionTitle;
-                subsectionTitle.id = `_${sectionKey}.${subsectionKey}`;
-                html_el.appendChild(subsectionTitle);
-            } else if (i > 0 && array[i].sectionTitle !== array[i - 1].sectionTitle) {
-                const sectionTitle = document.createElement("h2");
-                sectionTitle.textContent = array[i].sectionTitle;
-                sectionTitle.id = array[i].sectionKey;
-                html_el.appendChild(sectionTitle);
-    
-                const subsectionTitle = document.createElement("h3");
-                subsectionTitle.textContent = array[i].subsectionTitle;
-                subsectionTitle.id = `_${sectionKey}.${subsectionKey}`;
-                html_el.appendChild(subsectionTitle);
-            } else if (i > 0 && array[i].subsectionTitle !== array[i - 1].subsectionTitle) {
-                const subsectionTitle = document.createElement("h3");
-                subsectionTitle.textContent = array[i].subsectionTitle;
-                subsectionTitle.id = `_${sectionKey}.${subsectionKey}`;
                 html_el.appendChild(subsectionTitle);
             }
-
-            // Create prompt
+    
+            // Create prompt and response box
             const prompt = document.createElement("h5");
             prompt.textContent = array[i].prompt;
-            prompt.id = `prompt_${sectionKey}.${subsectionKey}.${promptKey}`;
             html_el.appendChild(prompt);
-
-            // Create response box or message
+    
             const responseBox = document.createElement("div");
             responseBox.classList.add("response-box");
-            responseBox.id = `response_${sectionKey}.${subsectionKey}.${promptKey}`;
-            responseBox.textContent = `Response: ${array[i].responses}` || "No response provided.";
+            responseBox.textContent = array[i].response ? `Response: ${array[i].response}` : "No response provided.";
             html_el.appendChild(responseBox);
         }
-    }
+    }    
     
 });
