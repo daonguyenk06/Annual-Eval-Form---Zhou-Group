@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 500);
     });
 
-    submitButton.addEventListener('click', function() {
+    submitButton.addEventListener('click', function () {
         const userInfo = {
             name: nameInput.value,
             position: positionInput.value,
@@ -112,30 +112,37 @@ document.addEventListener("DOMContentLoaded", function () {
             startDate: startDateInput.value,
             completionDate: completionDateInput.value,
         };
-
+    
+        // Validate the form fields
+        if (!userInfo.name || !userInfo.position || !userInfo.advisor ||
+            !userInfo.projectTitle || !userInfo.startDate || !userInfo.completionDate) {
+            alert("Please fill in all fields before submitting.");
+            return;
+        }
+    
+        // Prepare userResponse to include all sections, subsections, and responses
         let userResponse = {};
-        // Iterate through form_layout to maintain structure
         Object.keys(form_layout).forEach((sectionKey) => {
             const section = form_layout[sectionKey];
             userResponse[sectionKey] = {
                 title: section.title,
                 subsections: {},
             };
-
+    
             Object.keys(section.subsections).forEach((subsectionKey) => {
                 const subsection = section.subsections[subsectionKey];
                 userResponse[sectionKey].subsections[subsectionKey] = {
                     title: subsection.title,
                     prompts: {},
                 };
-
+    
                 Object.keys(subsection.prompts).forEach((promptKey) => {
                     const prompt = subsection.prompts[promptKey];
-
+    
                     // Locate the corresponding input by its ID
-                    const inputId = `${sectionKey.slice(-1)}.${subsectionKey.slice(-1)}.${promptKey}`;
+                    const inputId = `input_${sectionKey.slice(-1)}.${subsectionKey.slice(-1)}.${promptKey}`;
                     const input = document.getElementById(inputId);
-
+    
                     // Add prompt details and the user's response
                     userResponse[sectionKey].subsections[subsectionKey].prompts[promptKey] = {
                         prompt: prompt.prompt,
@@ -144,59 +151,43 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             });
         });
-
-        // Log the resulting structure or process it further
+    
+        // Log the resulting structure
         console.log(userResponse);
-
-        //Upload to Firebase
+    
+        // Upload to Firebase
         Firebase_upload(userInfo, userResponse);
-
-        alert("You have succesfully submitted the form");
+    
+        alert("You have successfully submitted the form.");
         setTimeout(() => {
             history.back();
         }, 500);
     });
-
+    
     //Function to upload to Firebase
-    function Firebase_upload(userInfo, data) {
-        const nameQuery = query(usersRef, orderByChild('name'), equalTo(nameInput.value));
+    function Firebase_upload(userInfo, userResponse) {
+        const nameQuery = query(usersRef, orderByChild('name'), equalTo(userInfo.name));
         onValue(nameQuery, (snapshot) => {
             if (snapshot.exists()) {
-                console.log("User found:", snapshot.val());
                 const userData = snapshot.val();
                 Object.keys(userData).forEach((key) => {
-                    console.log(`Found user at key ${key}:`, userData[key]);
-
-                    //Define Firebase reference
                     const researcherInfoRef = ref(database, `users/${key}/submissions/researchPlan/info`);
                     const researcherResponseRef = ref(database, `users/${key}/submissions/researchPlan/responses`);
-
-                    //Upload user's info to Firebase
+    
+                    // Upload user info
                     set(researcherInfoRef, userInfo)
-                    .then(() => {
-                        console.log("Researcher info successfully uploaded:", userInfo);
-                    })
-                    .catch((error) => {
-                        console.error("Error uploading researcher info:", error);
-                        alert("There was an error uploading your information. Please try again.");
-                        return; // Prevent further actions on error
-                    });
-
-                    //Upload user's response to Firebase
-                    set(researcherResponseRef, data)
-                    .then(() => {
-                        console.log("Researcher response successfully uploaded:", data);
-                    })
-                    .catch((error) => {
-                        console.error("Error uploading researcher response:", error);
-                        alert("There was an error uploading your response. Please try again.");
-                        return; // Prevent further actions on error
-                    });
+                        .then(() => console.log("Researcher info uploaded:", userInfo))
+                        .catch((error) => console.error("Error uploading researcher info:", error));
+    
+                    // Upload user responses
+                    set(researcherResponseRef, userResponse)
+                        .then(() => console.log("Researcher responses uploaded:", userResponse))
+                        .catch((error) => console.error("Error uploading researcher responses:", error));
                 });
             } else {
                 console.log("User not found!");
             }
         });
-    }
+    }    
     
 });
