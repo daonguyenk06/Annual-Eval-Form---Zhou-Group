@@ -43,6 +43,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    //Display user info if existed
+    displayInfo();
+
     //Next Button: uploads info; shows the questions; hide the form
     nextButton.addEventListener('click', function() {
         
@@ -190,5 +193,134 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }    
+    
+    
+    // Function to fetch and display user info
+    function displayInfo() {
+        getUserLocation((key) => {
+            if (key) {
+                const submissionDataRef = ref(database, `users/${key}/submissions/researchPlan`);
+                onValue(submissionDataRef, function(snapshot) {
+                    console.log("Raw responses:", snapshot.val()?.responses);
+                    const userInfo = snapshot.val()?.info;
+                    // console.log('userResponses: ' + userResponses);
+    
+                    // Loop through the keys and values of the data
+                    if (userInfo) {
+                        // console.log('userInfo: ' + userInfo);
+                        nameInput.value = userInfo.name;
+                        positionInput.value = userInfo.position;
+                        projectTitleInput.value = userInfo.projectTitle;
+                        advisorInput.value = userInfo.advisor;
+                        startDateInput.value = userInfo.startDate;
+                        completionDateInput.value = userInfo.completionDate;
+
+                    } else {
+                        console.log('No info found for the selected user.');
+                    }
+                });
+            } else {
+                console.log('No key found for the selected user.');
+                alert("An error has occurred! Please let Ky Duyen know.");
+            }
+        });
+    }
+
+    //Fetch and display user responses
+    function displayResponses() {
+        getUserLocation((key) => {
+            if (key) {
+                const submissionDataRef = ref(database, `users/${key}/submissions/evaluationForm`);
+                onValue(submissionDataRef, function(snapshot) {
+                    console.log("Raw responses:", snapshot.val()?.responses);
+                    const userInfo = snapshot.val()?.info;
+                    const responsesRaw = snapshot.val()?.responses;
+                    const userResponses = flattenArray(responsesRaw);
+                    console.log(userResponses);
+    
+                    // Loop through the keys and values of the data
+                    if (userResponses) {
+                        // populateResponses(userResponses);
+                    } else {
+                        console.log('No info found for the selected user.');
+                    }
+                });
+            } else {
+                console.log('No key found for the selected user.');
+                alert("An error has occurred! Please let Ky Duyen know.");
+            }
+        });
+    }
+
+    //ERROR: 
+    function populateResponses(userResponses) {
+        Object.keys(userResponses).forEach((sectionKey) => {
+            const section = userResponses[sectionKey];
+            
+            Object.keys(section.subsections).forEach((subsectionKey) => {
+                const subsection = section.subsections[subsectionKey];
+    
+                Object.keys(subsection.prompts).forEach((promptKey) => {
+                    const prompt = subsection.prompts[promptKey];
+    
+                    // Construct the textarea ID based on the pattern
+                    const inputId = `input_${sectionKey}.${subsectionKey}.${promptKey}`;
+                    const textarea = document.getElementById(inputId);
+    
+                    // Set the textarea value to the response
+                    if (textarea) {
+                        textarea.value = prompt.response || ""; // Set to empty string if no response
+                    } else {
+                        console.warn(`Textarea with ID ${inputId} not found.`);
+                    }
+                });
+            });
+        });
+    }
+    
+    function getUserLocation(callback) {
+        const nameQuery = query(usersRef, orderByChild('name'), equalTo(localStorage.getItem("name")));
+        onValue(nameQuery, (snapshot) => {
+            if (snapshot.exists()) {
+                // console.log("User found:", snapshot.val());
+                const userData = snapshot.val();
+                Object.keys(userData).forEach((key) => {
+                    // console.log(`Found user at key ${key}:`, userData[key]);
+                    callback(key); // Pass the key to the callback
+                });
+            } else {
+                console.log("User not found!");
+                callback(null); // Pass null if no user is found
+                alert("An error has occured!!!\n\nPlease let Ky Duyen know via email:\nkyduyen.daonguyen@mines.sdsmt.edu \n\nThanks!");
+            }
+        });
+    }
+
+    //Flattens the big arrays
+    function flattenArray(array) {
+        const prompts = [];
+
+        Object.keys(array).forEach((sectionKey) => {
+            const section = array[sectionKey];
+            Object.keys(section.subsections).forEach((subsectionKey) => {
+                const subsection = section.subsections[subsectionKey];
+                Object.keys(subsection.prompts).forEach((promptKey) => {
+                    const promptObj = subsection.prompts[promptKey];
+                    prompts.push({
+                        sectionKey: sectionKey,
+                        subsectionKey: subsectionKey, 
+                        promptKey: promptKey, 
+                        sectionTitle: section.title,
+                        subsectionTitle: subsection.title,
+                        ...promptObj, // Spread other prompt details
+                    });
+                });
+            });
+        });
+
+        return prompts;
+    }
+
+
     
 });
