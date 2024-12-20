@@ -31,9 +31,90 @@ onValue(usersRef, function(snapshot) {
     }
 });
 
+
+nameInput.addEventListener('change', function () {
+    // Reset password field visibility initially
+    passwordClass.forEach((element) => {
+        element.style.display = 'none';
+    });
+
+    const selectedName = nameInput.value;
+    if (!selectedName) {
+        console.log('No name selected.');
+        return;
+    }
+
+    // Fetch the user location based on the selected name
+    getUserLocation((key) => {
+        if (key) {
+            // console.log('Returned key:', key);
+
+            // Fetch permission for the selected user
+            getPermission(key, (permission) => {
+                if (permission) {
+                    // console.log('Returned permission:', permission);
+
+                    // Handle permission levels
+                    if (permission === 'admin') {
+                        passwordClass.forEach((element) => {
+                            element.style.display = 'block';
+                        });
+                    } else if (permission === 'member') {
+                        null;
+                    } else {
+                        alert('Permission not defined for this user.');
+                        nameInput.value = null;
+                    }
+                } else {
+                    console.log('No permission found.');
+                }
+            });
+        } else {
+            console.log('No key found for the selected user.');
+            alert("An error has occured!!!\n\nPlease let Ky Duyen know via email:\nkyduyen.daonguyen@mines.sdsmt.edu \n\nThanks!");
+        }
+    });
+});
+
+
 loginButton.addEventListener('click', function(){
-    login();
-    // console.log(localStorage.getItem('userStatus'));
+    getUserLocation((key) => {
+        if (key) {
+            // console.log('Returned key:', key);
+
+            // Fetch permission for the selected user
+            getPermission(key, (permission) => {
+                if (permission == 'admin') {
+                    //Set user status to admin
+                    onValue(authRef, function(snapshot) {
+                        const auth = snapshot.val();
+                        console.log(auth.password); //Matches what I typed in
+                        console.log(typeof auth.password); //Type string
+
+                        if(nameInput.value && passInput.value) {
+                            if(passInput.value == auth.password) {
+                                login(permission);
+                            }else{
+                                clearUserStatus();
+                                alert('Wrong password. Please try again!');
+                            }
+                        }else {
+                            alert('Invalid name or password. Please try again!');
+                        }
+                    });
+                }else if (permission == 'member') {
+                    login(permission);
+                }else {
+                    console.log("Permission not found.")
+                    clearUserStatus();
+                    alert("An error has occured!!!\n\nPlease let Ky Duyen know via email:\nkyduyen.daonguyen@mines.sdsmt.edu \n\nThanks!");
+                }
+            });
+        } else {
+            console.log('No key found for the selected user.');
+            alert("An error has occured!!!\n\nPlease let Ky Duyen know via email:\nkyduyen.daonguyen@mines.sdsmt.edu \n\nThanks!");
+        }
+    });
 });
 
 //Listen for if showPassword checkbox is checked
@@ -45,96 +126,62 @@ showPassword.addEventListener('change', function(event) {
     }
 });
 
-//Checking login validation
-function login() {
-    onValue(usersRef, function(userSnapshot) {
+//Save login status
+function login(permission) {
+    localStorage.setItem('name', nameInput.value);
+    localStorage.setItem('permission', permission);
+    console.log(localStorage.getItem('name'));
+    console.log(localStorage.getItem('permission'));
+    // history.back();
+}
 
-        //Check permission status
+
+function getUserLocation(callback) {
+    onValue(usersRef, function(userSnapshot) {
         const nameQuery = query(usersRef, orderByChild('name'), equalTo(nameInput.value));
         onValue(nameQuery, (snapshot) => {
             if (snapshot.exists()) {
-                console.log("User found:", snapshot.val());
+                // console.log("User found:", snapshot.val());
                 const userData = snapshot.val();
                 Object.keys(userData).forEach((key) => {
-                    console.log(`Found user at key ${key}:`, userData[key]);
-
-                    // Define user location reference
-                    const userLocation = ref(database, `users/${key}`);
-                    onValue(userLocation, function(permissionSnapshot) {
-                        const permissionData = permissionSnapshot.val();
-                        if (permissionData) {
-                            console.log('permission: ' + permissionData.permission);
-
-                            if(permissionData.permission == 'admin') {
-                                passwordClass.forEach((element) => {
-                                    element.style.display = 'block';
-                                });
-                            }
-
-                        } else {
-                            console.log('No permission data found.');
-                        }
-                    });
-
+                    // console.log(`Found user at key ${key}:`, userData[key]);
+                    callback(key); // Pass the key to the callback
                 });
             } else {
                 console.log("User not found!");
+                callback(null); // Pass null if no user is found
+                alert("An error has occured!!!\n\nPlease let Ky Duyen know via email:\nkyduyen.daonguyen@mines.sdsmt.edu \n\nThanks!");
             }
         });
-
-
-
-        // const memberUserValue = Object.values(userSnapshot.val()).join(''); // Get member's username from Firebase 
-        // console.log("Member username from Firebase:", memberUserValue);
-        // console.log("Username input:", userInput.value);
-        
-        // // Verify username
-        // if (userInput.value == memberUserValue) {
-        //     localStorage.setItem('memberUser', 'userValid'); // Store user validation locally
-
-        //     // After setting the user validation, check the password
-        //     onValue(memberPass, function(passSnapshot) {
-        //         const memberPassValue = Object.values(passSnapshot.val()).join(''); // Get member's password from Firebase
-        //         console.log("Member password from Firebase:", memberPassValue);
-        //         console.log("Password input:", passInput.value);
-                
-        //         // Verify password
-        //         if (passInput.value == memberPassValue) {
-        //             localStorage.setItem('memberPass', 'passValid'); // Store pass validation locally
-        //             console.log("Password is valid.");
-
-        //             // Both user and pass are valid, set user status and alert
-        //             localStorage.setItem('userStatus', 'member');
-        //             window.history.back();
-        //         } else {
-        //             // Password is invalid
-        //             console.log("Password is invalid.");
-        //             clearUserStatus();
-        //             localStorage.setItem('userStatus', 'guest');
-        //             alert("Email/password is invalid. Please try again!")
-        //             userInput.value = '';
-        //             passInput.value = '';
-        //         }
-        //     });
-        // } else {
-        //     // Username is invalid
-        //     console.log("Username is invalid.");
-        //     clearUserStatus();
-        //     localStorage.setItem('userStatus', 'guest');
-        //     alert("Email/password is invalid. Please try again!")
-        //     userInput.value = '';
-        //     passInput.value = '';
-        // }
     });
 }
 
-// function clearUserStatus() {
-//     //clear user status locally
-//     localStorage.clear('memberUser');
-//     localStorage.clear('memberPass');
-//     localStorage.setItem('userStatus', 'guest'); //set user as guest
 
-//     console.log(localStorage.getItem('memberUser'));
-//     console.log(localStorage.getItem('memberPass'));
-// }
+//Function to check permission status
+function getPermission(key, callback) {
+    const userLocation = ref(database, `users/${key}`);
+
+    onValue(userLocation, function(permissionSnapshot) {
+        const permissionData = permissionSnapshot.val();
+        if (permissionData) {
+            // console.log('permission: ' + permissionData.permission);
+            callback(permissionData.permission); // Pass the permission to the callback
+        } else {
+            console.log('No permission data found.');
+            callback(null); // Pass null if no data found
+            alert("An error has occured!!!\n\nPlease let Ky Duyen know via email:\nkyduyen.daonguyen@mines.sdsmt.edu \n\nThanks!");
+        }
+    });
+}
+
+
+function clearUserStatus() {
+    //clear user status locally
+    localStorage.clear('name');
+    localStorage.clear('permission');
+
+    console.log('User status cleared:');
+    console.log(localStorage.getItem('name'));
+    console.log(localStorage.getItem('permission'));
+}
 });
