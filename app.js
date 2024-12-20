@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     //HTML elements
     const welcomeLine = document.getElementById("welcome-line");
     const loginLink = document.getElementById("login-link");
+    const adminClass = document.querySelectorAll(".admin");
   
     //Get login status
     const name_local = localStorage.getItem('name');
@@ -23,6 +24,11 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "login.html";
     }
     
+    // if(permissionLevel != 'admin') {
+    //     adminClass.forEach((element) => {
+    //         element.style.display = 'none';
+    //     });
+    // }
 
     
 });
