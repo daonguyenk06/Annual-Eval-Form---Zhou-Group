@@ -88,8 +88,8 @@ loginButton.addEventListener('click', function(){
                     //Set user status to admin
                     onValue(authRef, function(snapshot) {
                         const auth = snapshot.val();
-                        console.log(auth.password); //Matches what I typed in
-                        console.log(typeof auth.password); //Type string
+                        // console.log(auth.password);
+                        // console.log(typeof auth.password);
 
                         if(nameInput.value && passInput.value) {
                             if(passInput.value == auth.password) {
