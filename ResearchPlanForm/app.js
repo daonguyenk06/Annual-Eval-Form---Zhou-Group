@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     //Define Firebase reference
                     const researcherInfoRef = ref(database, `users/${key}/submissions/researchPlan/info`);
-                    const researcherResponseRef = ref(database, `users/${key}/submissions/researchPlan/reponses`);
+                    const researcherResponseRef = ref(database, `users/${key}/submissions/researchPlan/responses`);
 
                     //Upload user's info to Firebase
                     set(researcherInfoRef, userInfo)
