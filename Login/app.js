@@ -134,27 +134,27 @@ function login(permission) {
     localStorage.setItem('permission', permission);
     console.log(localStorage.getItem('name'));
     console.log(localStorage.getItem('permission'));
-    history.back();
+    setTimeout(() => {
+        history.back();
+    }, 500);
 }
 
 
 function getUserLocation(callback) {
-    onValue(usersRef, function(userSnapshot) {
-        const nameQuery = query(usersRef, orderByChild('name'), equalTo(nameInput.value));
-        onValue(nameQuery, (snapshot) => {
-            if (snapshot.exists()) {
-                // console.log("User found:", snapshot.val());
-                const userData = snapshot.val();
-                Object.keys(userData).forEach((key) => {
-                    // console.log(`Found user at key ${key}:`, userData[key]);
-                    callback(key); // Pass the key to the callback
-                });
-            } else {
-                console.log("User not found!");
-                callback(null); // Pass null if no user is found
-                alert("An error has occured!!!\n\nPlease let Ky Duyen know via email:\nkyduyen.daonguyen@mines.sdsmt.edu \n\nThanks!");
-            }
-        });
+    const nameQuery = query(usersRef, orderByChild('name'), equalTo(nameInput.value));
+    onValue(nameQuery, (snapshot) => {
+        if (snapshot.exists()) {
+            // console.log("User found:", snapshot.val());
+            const userData = snapshot.val();
+            Object.keys(userData).forEach((key) => {
+                // console.log(`Found user at key ${key}:`, userData[key]);
+                callback(key); // Pass the key to the callback
+            });
+        } else {
+            console.log("User not found!");
+            callback(null); // Pass null if no user is found
+            alert("An error has occured!!!\n\nPlease let Ky Duyen know via email:\nkyduyen.daonguyen@mines.sdsmt.edu \n\nThanks!");
+        }
     });
 }
 

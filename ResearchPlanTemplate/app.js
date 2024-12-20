@@ -150,6 +150,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         //Upload to Firebase
         Firebase_upload(userInfo, userResponse);
+
+        alert("You have succesfully submitted the form");
+        setTimeout(() => {
+            history.back();
+        }, 500);
     });
 
     //Function to upload to Firebase
