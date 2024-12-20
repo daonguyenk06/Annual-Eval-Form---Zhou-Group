@@ -24,11 +24,11 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "login.html";
     }
     
-    // if(permissionLevel != 'admin') {
-    //     adminClass.forEach((element) => {
-    //         element.style.display = 'none';
-    //     });
-    // }
+    if(permissionLevel != 'admin') {
+        adminClass.forEach((element) => {
+            element.style.display = 'none';
+        });
+    }
 
     
 });
