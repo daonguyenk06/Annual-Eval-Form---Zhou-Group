@@ -21,10 +21,15 @@ document.addEventListener("DOMContentLoaded", function () {
     //List users
     onValue(usersRef, function(snapshot) {
         const usersList = Object.values(snapshot.val());
-        for(let i = 0; i < usersList.length; i++) {
+        const users_sorted = usersList.sort((a, b) => {
+            if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+            if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+            return 0;
+        });
+        for(let i = 0; i < users_sorted.length; i++) {
             const newOption = document.createElement('option');
-            newOption.textContent = usersList[i].name; 
-            newOption.value = usersList[i].name;
+            newOption.textContent = users_sorted[i].name; 
+            newOption.value = users_sorted[i].name;
             newOption.id = 'name_' + i;
             nameInput.appendChild(newOption);
         }
@@ -122,6 +127,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function generateResponses(array, html_el) {
         for (let i = 0; i < array.length; i++) {
+
+            // Get keys for prompt
+            const sectionKey = array[i].sectionKey.slice(-1);
+            const subsectionKey = array[i].subsectionKey.slice(-1);
+            const promptKey = array[i].promptKey;
+
             // Create titles
             if (i === 0 || array[i].sectionTitle !== array[i - 1]?.sectionTitle) {
                 const sectionTitle = document.createElement("h2");
@@ -140,10 +151,17 @@ document.addEventListener("DOMContentLoaded", function () {
             prompt.textContent = array[i].prompt;
             html_el.appendChild(prompt);
     
+            //Append user response
             const responseBox = document.createElement("div");
             responseBox.classList.add("response-box");
             responseBox.textContent = array[i].response ? `Response: ${array[i].response}` : "No response provided.";
             html_el.appendChild(responseBox);
+
+            //Create feeback boxes
+            const textarea = document.createElement('textarea');
+            textarea.id =  `feedback_${sectionKey}.${subsectionKey}.${promptKey}`
+            html_el.appendChild(textarea);
+
         }
     }    
     

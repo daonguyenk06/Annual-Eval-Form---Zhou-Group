@@ -24,10 +24,15 @@ console.log("Permission Level: " + localStorage.getItem('permission'));
 //List users
 onValue(usersRef, function(snapshot) {
     const usersList = Object.values(snapshot.val());
-    for(let i = 0; i < usersList.length; i++) {
+    const users_sorted = usersList.sort((a, b) => {
+        if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+        if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+        return 0;
+    });
+    for(let i = 0; i < users_sorted.length; i++) {
         const newOption = document.createElement('option');
-        newOption.textContent = usersList[i].name; 
-        newOption.value = usersList[i].name;
+        newOption.textContent = users_sorted[i].name; 
+        newOption.value = users_sorted[i].name;
         newOption.id = 'name_' + i;
         nameInput.appendChild(newOption);
     }
