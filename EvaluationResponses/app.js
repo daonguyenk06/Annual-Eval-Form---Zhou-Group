@@ -71,7 +71,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.log("Raw responses:", snapshot.val()?.responses);
                     const userInfo = snapshot.val()?.info;
                     const responsesRaw = snapshot.val()?.responses;
-                    const userResponses = flattenArray(responsesRaw);
+
+                    //Reorder and flatten objects 
+                    const reorderedResponses = reorderObject(responsesRaw);
+                    const userResponses = flattenArray(reorderedResponses);
                     console.log(userResponses);
     
                     // Clear any existing content in the container
@@ -164,5 +167,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
     }    
+
+    function reorderObject(originalObject) {
+        // Sort the keys based on the numeric part of `section_#`
+        const sortedKeys = Object.keys(originalObject).sort((a, b) => {
+            return parseInt(a.split('_')[1], 10) - parseInt(b.split('_')[1], 10);
+        });
+
+        // Create a new object to store the reordered data
+        const reorderedObject = {};
+
+        // Loop through the sorted keys and populate the new object
+        sortedKeys.forEach((key) => {
+            reorderedObject[key] = originalObject[key];
+        });
+
+        return reorderedObject;
+    }
     
 });
