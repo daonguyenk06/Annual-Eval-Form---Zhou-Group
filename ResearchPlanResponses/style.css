@@ -101,20 +101,51 @@ select:focus, input:focus, textarea:focus {
 
 /* Button Styling */
 button {
+    margin-top: 20px;
+    padding: 10px 15px;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
     font-size: 1rem;
-    padding: 10px 20px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    align-self: flex-start;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
     background-color: #45a049;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Button Container Styling */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Buttons inside the container */
+.button-container button {
+    width: auto; /* Buttons only take as much space as needed */
+    padding: 10px 20px;
+}
+
+/* Specific Button Colors (Optional) */
+#backButton {
+    background-color: gray; /* Red for Back button */
+}
+
+#nextButton, #submitButton {
+    background-color: #4CAF50; /* Green for Next button */
+}
+
+/* Button Hover Effects */
+#backButton:hover {
+    background-color: rgb(81, 79, 79);
+}
+
+#nextButton:hover, #submitButton:hover {
+    background-color: darkgreen;
 }
 
 /* Display Data Styling */

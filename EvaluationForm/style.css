@@ -99,13 +99,6 @@ button:hover {
     align-items: center;
     margin-top: 20px;
 }
-/* Button Container Styling */
-.button-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-}
 
 /* Buttons inside the container */
 .button-container button {

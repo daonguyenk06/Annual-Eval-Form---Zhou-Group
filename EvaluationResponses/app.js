@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const nameInput = document.getElementById("name");
     const nextButton = nameSelectForm.querySelector('button[type="button"]');
+    const backButton = document.getElementById('backButton');
     const submitButton = document.getElementById("submitButton");
 
     //List users
@@ -40,6 +41,15 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => {
             displayInfo();
             displayContainer.style.display = 'block';
+        }, 500);
+        
+    });
+
+    backButton.addEventListener('click', function(){
+        displayContainer.style.display = 'none';
+        setTimeout(() => {
+            displayInfo();
+            formContainer.style.display = 'block';
         }, 500);
         
     });
@@ -78,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.log(userResponses);
     
                     // Clear any existing content in the container
-                    displayContainer.innerHTML = "";
+                    // displayContainer.innerHTML = "";
     
                     // Loop through the keys and values of the data
                     if (userInfo && userResponses) {
