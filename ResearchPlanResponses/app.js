@@ -63,7 +63,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Function to fetch and display the data
-    // Function to fetch and display the data
     function displayInfo() {
         getUserLocation((key) => {
             if (key) {
