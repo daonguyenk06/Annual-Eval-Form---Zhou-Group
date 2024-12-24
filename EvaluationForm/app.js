@@ -82,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Show the next section: Create the form with questions
         setTimeout(() => {
-            displayResponses();
             formDiv.style.display = 'block';
         }, 500);
         
