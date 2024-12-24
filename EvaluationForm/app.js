@@ -118,14 +118,14 @@ document.addEventListener("DOMContentLoaded", function () {
             const section = evaluation_form_layout[sectionKey];
             userResponse[sectionKey] = {
                 title: section.title,
-                subsections: {},
+                subsections: {}
             };
     
             Object.keys(section.subsections).forEach((subsectionKey) => {
                 const subsection = section.subsections[subsectionKey];
                 userResponse[sectionKey].subsections[subsectionKey] = {
                     title: subsection.title,
-                    prompts: {},
+                    prompts: {}
                 };
     
                 Object.keys(subsection.prompts).forEach((promptKey) => {
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Capture the prompt and response
                     userResponse[sectionKey].subsections[subsectionKey].prompts[promptKey] = {
                         prompt: prompt.prompt,
-                        response: input ? input.value : "", // Default to empty string if no response
+                        response: input ? input.value : "" // Default to empty string if no response
                     };
                 });
             });
