@@ -41,14 +41,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     nextButton.addEventListener('click', function(){
         formContainer.style.display = 'none';
+
         setTimeout(() => {
             displayContainer.style.display = 'block';
-            submitButton.style.display = 'block';
-
-            if(!displayDataIsCalled) {
-                displayData();
-            }
         }, 500);
+
+        if(!displayDataIsCalled) {
+            getfeedbackStatus().then((status) => {
+                if (status) {
+                    console.log("Submission exists!");
+                    submitButton.style.display = 'none';
+                    displayContainer.innerHTML = `<p>Feedback has already been submitted.</p>`;
+                    displayContainer.style.backgroundColor = 'green';
+                } else {
+                    console.log("No submission found.");
+                    submitButton.style.display = 'block';
+                    displayData();
+                }
+            });
+        }
     });
 
     backButton.addEventListener('click', function() {
@@ -62,21 +73,15 @@ document.addEventListener("DOMContentLoaded", function () {
     submitButton.addEventListener('click', function() {
         uploadFeedback(nameInput.value);
 
-        displayContainer.style.display = 'none';
-        submitButton.style.display = 'none';
-        setTimeout(() => {
-            formContainer.style.display = 'block';
-        }, 500);
+        window.location.reload();
     });
 
     function getUserLocation(callback, name) {
         const nameQuery = query(usersRef, orderByChild('name'), equalTo(name));
         onValue(nameQuery, (snapshot) => {
             if (snapshot.exists()) {
-                // console.log("User found:", snapshot.val());
                 const userData = snapshot.val();
                 Object.keys(userData).forEach((key) => {
-                    // console.log(`Found user at key ${key}:`, userData[key]);
                     callback(key); // Pass the key to the callback
                 });
             } else {
@@ -182,6 +187,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert("Error fetching user data. Please try again.");
             });
     }    
+
+    function getfeedbackStatus() {
+        return new Promise((resolve, reject) => {
+            getUserLocation((key) => {
+                if (key) {
+                    const feedbackDataRef = ref(database, `users/${key}/submissions/evaluationForm/feedbacks`);
+                    onValue(feedbackDataRef, function(snapshot) {
+                        const feedback = snapshot.val();
+    
+                        if (feedback) {
+                            resolve(true); // Fulfill the promise with `true`
+                        } else {
+                            resolve(false); // Fulfill the promise with `false`
+                        }
+                    }, (error) => {
+                        console.error('Error reading data:', error);
+                        reject(error); // Reject the promise if there's an error
+                    });
+                } else {
+                    console.log('No key found for the selected user.');
+                    alert("An error has occurred! Please let Ky Duyen know.");
+                    resolve(false); // Resolve as `false` if no key is found
+                }
+            }, nameInput.value);
+        });
+    }
 
 
     //Flattens the big arrays
