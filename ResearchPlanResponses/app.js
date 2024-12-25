@@ -1,6 +1,6 @@
 // Firebase imports
 import { database } from "../firebaseConfig.js";
-import { ref, query, orderByChild, equalTo, push, onValue, update, set, remove, child } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
+import { ref, query, orderByChild, equalTo, push, onValue, update, set, get, remove, child } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
 
 //**By wrapping the code inside the DOMContentLoaded event listener, you ensure that the code will only run when the DOM is ready.
 document.addEventListener("DOMContentLoaded", function () {
@@ -58,7 +58,10 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => {
             formContainer.style.display = 'block';
         }, 500);
-        
+    });
+
+    submitButton.addEventListener('click', function() {
+        uploadFeedback(nameInput.value);
     });
     
 
@@ -116,6 +119,63 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    function uploadFeedback(name) {
+        const nameQuery = query(usersRef, orderByChild('name'), equalTo(name));
+    
+        // Use `get` for a one-time read to avoid an endless loop
+        get(nameQuery)
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    console.log("User found:", snapshot.val());
+                    const userData = snapshot.val();
+    
+                    Object.keys(userData).forEach((key) => {
+                        console.log(`Uploading data for user key: ${key}`);
+    
+                        const feedbackRef = ref(database, `users/${key}/submissions/researchPlan/feedbacks`);
+                        const feedbackInputs = document.querySelectorAll('[id^="feedback_"]');
+                        const feedbacks = {};
+    
+                        console.log(feedbackRef);
+    
+                        feedbackInputs.forEach((input, i) => {
+                            // Extract keys from input id
+                            const [sectionKey, subsectionKey, promptKey] = input.id
+                                .split('_')[1]
+                                .split('.'); // Extract section, subsection, and prompt keys
+    
+                            feedbacks[i] = {
+                                sectionKey: sectionKey,
+                                subsectionKey: subsectionKey,
+                                promptKey: promptKey,
+                                feedback: input.value,
+                                id: input.id
+                            };
+                        });
+    
+                        // Upload feedbacks to Firebase
+                        set(feedbackRef, feedbacks)
+                            .then(() => {
+                                console.log("Feedback successfully uploaded:", feedbacks);
+                                alert("Feedback successfully uploaded.");
+                            })
+                            .catch((error) => {
+                                console.error("Error uploading feedback to Firebase:", error);
+                                alert("Error uploading feedback. Please try again.");
+                            });
+                    });
+                } else {
+                    console.error("User not found!");
+                    alert("Error: User not found.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching user data:", error);
+                alert("Error fetching user data. Please try again.");
+            });
+    }
+
 
     //Flattens the big arrays
     function flattenArray(array) {
