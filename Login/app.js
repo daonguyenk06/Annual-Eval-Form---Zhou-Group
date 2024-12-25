@@ -140,8 +140,8 @@ function login(permission) {
     console.log(localStorage.getItem('name'));
     console.log(localStorage.getItem('permission'));
     setTimeout(() => {
-        history.back();
-    }, 500);
+        window.location.href = "../index.html";
+    }, 600);
 }
 
 

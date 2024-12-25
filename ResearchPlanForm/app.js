@@ -212,7 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
         alert("You have successfully submitted the form.");
         setTimeout(() => {
-            history.back();
+            window.location.href = "../index.html";
         }, 500);
     });
     

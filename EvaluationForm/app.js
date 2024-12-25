@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
         alert("You have successfully submitted the evaluation form.");
         setTimeout(() => {
-            history.back();
+            window.location.href = "../index.html";
         }, 500);
     });
     
