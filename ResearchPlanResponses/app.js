@@ -19,6 +19,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const backButton = document.getElementById('backButton');
     const submitButton = document.getElementById("submitButton");
 
+    //Initialize; keeps track if function is called
+    let displayDataIsCalled = false; 
+
+
     //List users
     onValue(usersRef, function(snapshot) {
         const usersList = Object.values(snapshot.val());
@@ -39,7 +43,9 @@ document.addEventListener("DOMContentLoaded", function () {
     nextButton.addEventListener('click', function(){
         formContainer.style.display = 'none';
         setTimeout(() => {
-            displayInfo();
+            if(!displayDataIsCalled) {
+                displayData();
+            }
             displayContainer.style.display = 'block';
         }, 500);
         
@@ -48,7 +54,6 @@ document.addEventListener("DOMContentLoaded", function () {
     backButton.addEventListener('click', function(){
         displayContainer.style.display = 'none';
         setTimeout(() => {
-            displayInfo();
             formContainer.style.display = 'block';
         }, 500);
         
@@ -74,22 +79,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Function to fetch and display the data
-    function displayInfo() {
+    function displayData() {
+
+        displayDataIsCalled = true; // Set true when the function is called
+
         getUserLocation((key) => {
             if (key) {
                 const submissionDataRef = ref(database, `users/${key}/submissions/researchPlan`);
                 onValue(submissionDataRef, function(snapshot) {
-                    console.log("Raw responses:", snapshot.val()?.responses);
+                    
                     const userInfo = snapshot.val()?.info;
-                    const responsesRaw = snapshot.val()?.responses;
-
-                    //Reorder and flatten objects 
-                    const reorderedResponses = reorderObject(responsesRaw);
-                    const userResponses = flattenArray(reorderedResponses);
-                    console.log(userResponses);
-    
-                    // Clear any existing content in the container
-                    // displayContainer.innerHTML = "";
+                    const userResponses = snapshot.val()?.responses;
+                    console.log("User responses:", userResponses);
     
                     // Loop through the keys and values of the data
                     if (userInfo && userResponses) {
@@ -177,6 +178,12 @@ document.addEventListener("DOMContentLoaded", function () {
             html_el.appendChild(textarea);
 
         }
+
+        //Create submit button
+        const submitButton = document.createElement('button');
+        submitButton.id = 'submitButton';
+        submitButton.textContent = 'Submit';
+        html_el.appendChild(submitButton);
     }    
 
     function reorderObject(originalObject) {

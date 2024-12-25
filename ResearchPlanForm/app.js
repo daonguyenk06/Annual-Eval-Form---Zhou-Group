@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(userResponse);
     
         // Upload to Firebase
-        Firebase_upload(userInfo, userResponse);
+        Firebase_upload(userInfo, flattenArray(userResponse));
     
         alert("You have successfully submitted the form.");
         setTimeout(() => {
