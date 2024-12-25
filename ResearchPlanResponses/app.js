@@ -71,8 +71,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     
 
-    function getUserLocation(callback) {
-        const nameQuery = query(usersRef, orderByChild('name'), equalTo(nameInput.value));
+    function getUserLocation(callback, name) {
+        const nameQuery = query(usersRef, orderByChild('name'), equalTo(name));
         onValue(nameQuery, (snapshot) => {
             if (snapshot.exists()) {
                 // console.log("User found:", snapshot.val());
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 submitButton.style.display = 'none';
                 alert("An error has occurred! Please let Ky Duyen know.");
             }
-        });
+        }, nameInput.value);
     }
 
     function uploadFeedback(name) {

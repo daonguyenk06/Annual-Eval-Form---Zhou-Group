@@ -579,10 +579,4 @@ export function createForm(prompts, html_el) {
             html_el.appendChild(textarea);
         }
     }
-
-    //Create submit button
-    const submitButton = document.createElement('button');
-    submitButton.id = 'submitButton';
-    submitButton.textContent = 'Submit';
-    html_el.appendChild(submitButton);
 }

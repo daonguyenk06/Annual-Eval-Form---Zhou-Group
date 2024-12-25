@@ -17,9 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const formDiv = document.getElementById('form-div');
     const researcherInfoForm = document.getElementById('researcher-info-form');
 
-    //Create form
-    createForm(flattenPrompts(form_layout), formDiv);
-
     const nameInput = document.getElementById('name');
     const positionInput = document.getElementById('position');
     const advisorInput = document.getElementById('advisor');
@@ -30,6 +27,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const nextButton = researcherInfoForm.querySelector('button[type="button"]');
     const backButton = document.getElementById('backButton');
     const submitButton = document.getElementById('submitButton');
+
+    let nextButtonClicked = false;
 
     //List users
     onValue(usersRef, function(snapshot) {
@@ -71,6 +70,12 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        //Compare nameInput with login name
+        if (researcherInfo.name != localStorage.getItem("name")) {
+            alert("Your name does not match your login information.\nPlease verify your account.\nOR\nCheck if you're logged in.");
+            return;
+        }
+
         // Validate date format (MM/DD/YYYY)
         const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}$/;
 
@@ -93,19 +98,57 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Hide the current form
+        // Hide the info form
         researcherInfoForm.style.display = "none";
+
+        if(!nextButtonClicked) {
+            getUserLocation((key) => {
+                if (key) {
+                    const submissionDataRef = ref(database, `users/${key}/submissions/evaluationForm/`);
+                    onValue(submissionDataRef, function(snapshot) {
+                        const submission = snapshot.val();
+                        
+                        getSubmissionStatus().then((status) => {
+                            if (status) {
+                                console.log("Submission exists!");
+
+                                generateFeedbacksAndResponses(submission.responses, submission.feedbacks, formDiv);
+                                
+                                submitButton.disabled = true;
+                                let currentOpacity = parseFloat(window.getComputedStyle(submitButton).opacity);
+                                submitButton.style.opacity = (currentOpacity - 0.5).toFixed(1);
+                                submitButton.style.pointerEvents = 'none';
+                            } else {
+                                console.log("No submission found.");
+                                createForm(flattenPrompts(form_layout), formDiv);
+                            }
+                        });
+
+                    }, (error) => {
+                        console.error('Error reading data:', error);
+                        reject(error); // Reject the promise if there's an error
+                    });
+                } else {
+                    console.log('No key found for the selected user.');
+                    alert("An error has occurred! Please let Ky Duyen know.");
+                    resolve(false); // Resolve as `false` if no key is found
+                }
+            }, nameInput.value);
+        }
 
         // Show the next section: Create the form with questions
         setTimeout(() => {
             formDiv.style.display = 'block';
+            submitButton.style.display = 'block';
         }, 500);
         
+        nextButtonClicked = true;
     });
 
     //Back button: Hides the questions; shows the form
     backButton.addEventListener('click', function () {
         formDiv.style.display = "none"; // Hide questions section
+        submitButton.style.display = 'none';
         setTimeout(() => {
             researcherInfoForm.style.display = "block"; // Show the form
         }, 500);
@@ -197,7 +240,70 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log("User not found!");
             }
         });
-    }    
+    }   
+    
+    function generateFeedbacksAndResponses(response_array, feedback_array = [], html_el) {
+        for (let i = 0; i < response_array.length; i++) {
+
+            // Create titles
+            if (i === 0 || response_array[i].sectionTitle !== response_array[i - 1]?.sectionTitle) {
+                const sectionTitle = document.createElement("h2");
+                sectionTitle.textContent = response_array[i].sectionTitle;
+                html_el.appendChild(sectionTitle);
+            }
+    
+            if (i === 0 || response_array[i].subsectionTitle !== response_array[i - 1]?.subsectionTitle) {
+                const subsectionTitle = document.createElement("h3");
+                subsectionTitle.textContent = response_array[i].subsectionTitle;
+                html_el.appendChild(subsectionTitle);
+            }
+    
+            // Create prompt and response box
+            const prompt = document.createElement("h5");
+            prompt.textContent = response_array[i].prompt;
+            html_el.appendChild(prompt);
+    
+            //Append user response
+            const responseBox = document.createElement("div");
+            responseBox.classList.add("response-box");
+            responseBox.textContent = response_array[i].response ? `Response: ${response_array[i].response}` : "No response provided.";
+            html_el.appendChild(responseBox);
+
+            // Append feedbacks, with a safe fallback if feedback_array is undefined or shorter than response_array
+            const feedback = feedback_array[i]?.feedback || "No feedback provided.";
+            const feedbackBox = document.createElement("div");
+            feedbackBox.classList.add("feedback-box");
+            feedbackBox.textContent = `Feedback: ${feedback}`;
+            html_el.appendChild(feedbackBox);
+        }
+    }   
+
+
+    function getSubmissionStatus() {
+        return new Promise((resolve, reject) => {
+            getUserLocation((key) => {
+                if (key) {
+                    const submissionDataRef = ref(database, `users/${key}/submissions/evaluationForm/`);
+                    onValue(submissionDataRef, function(snapshot) {
+                        const submission = snapshot.val();
+    
+                        if (submission) {
+                            resolve(true); // Fulfill the promise with `true`
+                        } else {
+                            resolve(false); // Fulfill the promise with `false`
+                        }
+                    }, (error) => {
+                        console.error('Error reading data:', error);
+                        reject(error); // Reject the promise if there's an error
+                    });
+                } else {
+                    console.log('No key found for the selected user.');
+                    alert("An error has occurred! Please let Ky Duyen know.");
+                    resolve(false); // Resolve as `false` if no key is found
+                }
+            }, nameInput.value);
+        });
+    }
     
     
     // Function to fetch and display user info
@@ -228,62 +334,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log('No key found for the selected user.');
                 alert("An error has occurred! Please let Ky Duyen know.");
             }
-        });
+        }, localStorage.getItem("name"));
     }
 
-    //Fetch and display user responses
-    function displayResponses() {
-        getUserLocation((key) => {
-            if (key) {
-                const submissionDataRef = ref(database, `users/${key}/submissions/evaluationForm`);
-                onValue(submissionDataRef, function(snapshot) {
-                    console.log("Raw responses:", snapshot.val()?.responses);
-                    const responsesRaw = snapshot.val()?.responses;
-                    const userResponses = flattenArray(responsesRaw);
-                    console.log(userResponses);
     
-                    // Loop through the keys and values of the data
-                    if (userResponses) {
-                        // populateResponses(userResponses);
-                    } else {
-                        console.log('No info found for the selected user.');
-                    }
-                });
-            } else {
-                console.log('No key found for the selected user.');
-                alert("An error has occurred! Please let Ky Duyen know.");
-            }
-        });
-    }
-
-    //ERROR: 
-    function populateResponses(userResponses) {
-        Object.keys(userResponses).forEach((sectionKey) => {
-            const section = userResponses[sectionKey];
-            
-            Object.keys(section.subsections).forEach((subsectionKey) => {
-                const subsection = section.subsections[subsectionKey];
-    
-                Object.keys(subsection.prompts).forEach((promptKey) => {
-                    const prompt = subsection.prompts[promptKey];
-    
-                    // Construct the textarea ID based on the pattern
-                    const inputId = `input_${sectionKey}.${subsectionKey}.${promptKey}`;
-                    const textarea = document.getElementById(inputId);
-    
-                    // Set the textarea value to the response
-                    if (textarea) {
-                        textarea.value = prompt.response || ""; // Set to empty string if no response
-                    } else {
-                        console.warn(`Textarea with ID ${inputId} not found.`);
-                    }
-                });
-            });
-        });
-    }
-    
-    function getUserLocation(callback) {
-        const nameQuery = query(usersRef, orderByChild('name'), equalTo(localStorage.getItem("name")));
+    function getUserLocation(callback, name) {
+        const nameQuery = query(usersRef, orderByChild('name'), equalTo(name));
         onValue(nameQuery, (snapshot) => {
             if (snapshot.exists()) {
                 // console.log("User found:", snapshot.val());

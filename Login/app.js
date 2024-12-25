@@ -80,7 +80,7 @@ nameInput.addEventListener('change', function () {
             console.log('No key found for the selected user.');
             alert("An error has occured!!!\n\nPlease let Ky Duyen know via email:\nkyduyen.daonguyen@mines.sdsmt.edu \n\nThanks!");
         }
-    });
+    }, nameInput.value);
 });
 
 
@@ -121,7 +121,7 @@ loginButton.addEventListener('click', function(){
             console.log('No key found for the selected user.');
             alert("An error has occured!!!\n\nPlease let Ky Duyen know via email:\nkyduyen.daonguyen@mines.sdsmt.edu \n\nThanks!");
         }
-    });
+    }, nameInput.value);
 });
 
 //Listen for if showPassword checkbox is checked
@@ -145,8 +145,8 @@ function login(permission) {
 }
 
 
-function getUserLocation(callback) {
-    const nameQuery = query(usersRef, orderByChild('name'), equalTo(nameInput.value));
+function getUserLocation(callback, name) {
+    const nameQuery = query(usersRef, orderByChild('name'), equalTo(name));
     onValue(nameQuery, (snapshot) => {
         if (snapshot.exists()) {
             // console.log("User found:", snapshot.val());

@@ -1169,10 +1169,4 @@ export function createForm(prompts, html_el) {
             console.warn(`Unknown input type: ${prompts[i].type_of_inputs}`);
         }
     }
-
-    //Create submit button
-    const submitButton = document.createElement('button');
-    submitButton.id = 'submitButton';
-    submitButton.textContent = 'Submit';
-    html_el.appendChild(submitButton);
 }
