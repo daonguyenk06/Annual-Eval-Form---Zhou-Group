@@ -62,12 +62,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    backButton.addEventListener('click', function() {
-        displayContainer.style.display = 'none';
-        submitButton.style.display = 'none';
-        setTimeout(() => {
-            formContainer.style.display = 'block';
-        }, 500);
+    backButton.addEventListener('click', function(){
+        window.location.reload();
     });
 
     submitButton.addEventListener('click', function() {
