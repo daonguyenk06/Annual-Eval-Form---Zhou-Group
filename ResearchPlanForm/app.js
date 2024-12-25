@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if(!nextButtonClicked) {
             getUserLocation((key) => {
                 if (key) {
-                    const submissionDataRef = ref(database, `users/${key}/submissions/evaluationForm/`);
+                    const submissionDataRef = ref(database, `users/${key}/submissions/researchPlan/`);
                     onValue(submissionDataRef, function(snapshot) {
                         const submission = snapshot.val();
                         
@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return new Promise((resolve, reject) => {
             getUserLocation((key) => {
                 if (key) {
-                    const submissionDataRef = ref(database, `users/${key}/submissions/evaluationForm/`);
+                    const submissionDataRef = ref(database, `users/${key}/submissions/researchPlan/`);
                     onValue(submissionDataRef, function(snapshot) {
                         const submission = snapshot.val();
     
