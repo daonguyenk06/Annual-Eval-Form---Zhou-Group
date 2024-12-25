@@ -122,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             } else {
                 console.log('No key found for the selected user.');
+                submitButton.style.display = 'none';
                 alert("An error has occurred! Please let Ky Duyen know.");
             }
         });
