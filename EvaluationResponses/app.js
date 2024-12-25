@@ -39,16 +39,16 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    nextButton.addEventListener('click', function() {
+    nextButton.addEventListener('click', function(){
         formContainer.style.display = 'none';
         setTimeout(() => {
+            displayContainer.style.display = 'block';
+            submitButton.style.display = 'block';
+
             if(!displayDataIsCalled) {
                 displayData();
             }
-            displayContainer.style.display = 'block';
-            submitButton.style.display = 'block';
         }, 500);
-        
     });
 
     backButton.addEventListener('click', function() {
@@ -114,6 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     } else {
                         console.log('No info found for the selected user.');
+                        submitButton.style.display = 'none';
                         displayContainer.innerHTML = `<p>No data available for the selected user.</p>`;
                     }
                 });
