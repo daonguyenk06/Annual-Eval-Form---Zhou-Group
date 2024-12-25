@@ -126,6 +126,31 @@ button:hover {
     background-color: darkgreen;
 }
 
+/* Display Data Styling */
+#display-container p, .response-box, .feedback-box {
+    font-size: 1rem;
+    color: #333;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional hover effect for better interactivity */
+.response-box:hover, .feedback-box:hover {
+    background-color: #e9e9e9;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* For visual hierarchy when displaying responses and feedbacks */
+.feedback-box {
+    border-left: 4px solid #4CAF50; /* Feedback highlight with color */
+    margin-top: 5px;
+    font-style: italic;
+}
+
 /* Ensure Buttons Adjust for Smaller Screens */
 @media (max-width: 100px) {
     .button-container {
