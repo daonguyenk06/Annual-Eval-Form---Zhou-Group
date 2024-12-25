@@ -47,12 +47,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 displayData();
             }
             displayContainer.style.display = 'block';
+            submitButton.style.display = 'block';
         }, 500);
         
     });
 
     backButton.addEventListener('click', function(){
         displayContainer.style.display = 'none';
+        submitButton.style.display = 'none';
         setTimeout(() => {
             formContainer.style.display = 'block';
         }, 500);
@@ -178,12 +180,6 @@ document.addEventListener("DOMContentLoaded", function () {
             html_el.appendChild(textarea);
 
         }
-
-        //Create submit button
-        const submitButton = document.createElement('button');
-        submitButton.id = 'submitButton';
-        submitButton.textContent = 'Submit';
-        html_el.appendChild(submitButton);
     }    
 
     function reorderObject(originalObject) {

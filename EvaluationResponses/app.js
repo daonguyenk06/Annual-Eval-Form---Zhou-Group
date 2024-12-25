@@ -39,19 +39,20 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    nextButton.addEventListener('click', function(){
+    nextButton.addEventListener('click', function() {
         formContainer.style.display = 'none';
         setTimeout(() => {
             if(!displayDataIsCalled) {
                 displayData();
             }
             displayContainer.style.display = 'block';
+            submitButton.style.display = 'block';
         }, 500);
         
     });
 
-    backButton.addEventListener('click', function(){
         displayContainer.style.display = 'none';
+        submitButton.style.display = 'none';
         setTimeout(() => {
             formContainer.style.display = 'block';
         }, 500);
@@ -176,7 +177,6 @@ document.addEventListener("DOMContentLoaded", function () {
             html_el.appendChild(textarea);
 
         }
-
         //Create submit button
         const submitButton = document.createElement('button');
         submitButton.id = 'submitButton';
