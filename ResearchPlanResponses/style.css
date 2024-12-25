@@ -27,6 +27,10 @@ header h1 {
     margin: 0;
 }
 
+h1 {
+    text-align: center;
+}
+
 header .login-link {
     font-size: 1rem;
     text-decoration: none;
@@ -79,7 +83,7 @@ label {
 
 select, input, textarea, button {
     width: 100%;
-    max-width: 400px;
+    /* max-width: 400px; */
     padding: 10px;
     font-size: 1rem;
     border: 1px solid #ccc;
@@ -87,10 +91,6 @@ select, input, textarea, button {
     box-sizing: border-box;
     background-color: #f9f9f9;
     transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
-textarea {
-    resize: none;
 }
 
 select:focus, input:focus, textarea:focus {
@@ -122,6 +122,8 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     margin-top: 20px;
+    position: sticky;
+    top: 0;
 }
 
 /* Buttons inside the container */

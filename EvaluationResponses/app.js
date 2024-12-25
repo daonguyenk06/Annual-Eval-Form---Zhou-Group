@@ -61,11 +61,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     submitButton.addEventListener('click', function() {
         uploadFeedback(nameInput.value);
-        // displayContainer.style.display = 'none';
-        // submitButton.style.display = 'none';
-        // setTimeout(() => {
-        //     formContainer.style.display = 'block';
-        // }, 500);
+
+        displayContainer.style.display = 'none';
+        submitButton.style.display = 'none';
+        setTimeout(() => {
+            formContainer.style.display = 'block';
+        }, 500);
     });
 
     function getUserLocation(callback) {
@@ -240,7 +241,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             //Create feeback boxes
             const textarea = document.createElement('textarea');
-            textarea.id =  `feedback_${sectionKey}.${subsectionKey}.${promptKey}`
+            textarea.id =  `feedback_${sectionKey}.${subsectionKey}.${promptKey}`;
+            textarea.placeholder = 'Comments...';
             html_el.appendChild(textarea);
 
         }

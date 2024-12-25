@@ -98,6 +98,8 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     margin-top: 20px;
+    position: sticky;
+    top: 0;
 }
 
 /* Buttons inside the container */
@@ -124,18 +126,6 @@ button:hover {
     background-color: darkgreen;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .button-container {
-        flex-direction: column; /* Stack buttons vertically */
-        gap: 10px; /* Space between buttons */
-    }
-
-    .button-container button {
-        width: 100%; /* Make buttons full-width */
-    }
-}
-
 /* Ensure Buttons Adjust for Smaller Screens */
 @media (max-width: 100px) {
     .button-container {
@@ -147,7 +137,6 @@ button:hover {
         width: 100%;
     }
 }
-
 
 /* Grouping for Form Spacing */
 .form-group {
