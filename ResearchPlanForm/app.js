@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const backButton = document.getElementById('backButton');
     const submitButton = document.getElementById('submitButton');
 
+    let userResponse = {};
     let nextButtonClicked = false;
 
     //List users
@@ -47,10 +48,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    //Display user info if existed
+    // Display user info if existed
     displayInfo();
 
-    //Next Button: uploads info; shows the questions; hide the form
+    // Next Button: uploads info; shows the questions; hide the form
     nextButton.addEventListener('click', function() {
         
         // Gather researcher info
@@ -126,12 +127,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     }, (error) => {
                         console.error('Error reading data:', error);
-                        reject(error); // Reject the promise if there's an error
+                        reject(error);
                     });
                 } else {
                     console.log('No key found for the selected user.');
                     alert("An error has occurred! Please let Ky Duyen know.");
-                    resolve(false); // Resolve as `false` if no key is found
+                    resolve(false);
                 }
             }, nameInput.value);
         }
@@ -145,12 +146,12 @@ document.addEventListener("DOMContentLoaded", function () {
         nextButtonClicked = true;
     });
 
-    //Back button: Hides the questions; shows the form
+    // Back button: Hides the questions; shows the form
     backButton.addEventListener('click', function () {
-        formDiv.style.display = "none"; // Hide questions section
+        formDiv.style.display = "none";
         submitButton.style.display = 'none';
         setTimeout(() => {
-            researcherInfoForm.style.display = "block"; // Show the form
+            researcherInfoForm.style.display = "block";
         }, 500);
     });
 
@@ -173,7 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     
         // Prepare userResponse to include all sections, subsections, and responses
-        let userResponse = {};
         Object.keys(form_layout).forEach((sectionKey) => {
             const section = form_layout[sectionKey];
             userResponse[sectionKey] = {
@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const prompt = subsection.prompts[promptKey];
     
                     // Locate the corresponding input by its ID
-                    const inputId = `input_${sectionKey.slice(-1)}.${subsectionKey.slice(-1)}.${promptKey}`;
+                    const inputId = `input_${sectionKey.split('_')[1]}.${subsectionKey.split('_')[1]}.${promptKey}`;
                     const input = document.getElementById(inputId);
     
                     // Add prompt details and the user's response
@@ -204,16 +204,23 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     
-        // Log the resulting structure
-        console.log(userResponse);
+        console.log(isAllFieldFilled(flattenArray(userResponse)));
+        isAllFieldFilled(flattenArray(userResponse));
+        console.log(flattenArray(userResponse));
     
         // Upload to Firebase
-        Firebase_upload(userInfo, flattenArray(userResponse));
+        if(isAllFieldFilled(flattenArray(userResponse))) {
+            Firebase_upload(userInfo, flattenArray(userResponse));
+            alert("You have successfully submitted the form.");
+            // setTimeout(() => {
+            //     window.location.href = "../index.html";
+            // }, 500);
+        }else {
+            alert("Some questions are left unanswered!\nPlease review and complete all questions before proceeding.");
+        }
+        
     
-        alert("You have successfully submitted the form.");
-        setTimeout(() => {
-            window.location.href = "../index.html";
-        }, 500);
+        
     });
     
     //Function to upload to Firebase
@@ -241,6 +248,61 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }   
+
+    function isAllFieldFilled(userResponse) {
+        let emptyFields = [];
+    
+        userResponse.forEach((entry) => {
+            // Check if the response is empty
+            try {
+                if (!entry.response.trim()) {
+                    const inputID = `input_${entry.sectionKey.split('_')[1]}.${entry.subsectionKey.split('_')[1]}.${entry.promptKey}`;
+                    emptyFields.push(inputID);
+                }
+            } catch (error) {
+                console.warn("Error processing entry:", entry, error);
+            }
+            
+        });
+
+        console.log(emptyFields);
+
+        if (emptyFields.length > 0) {
+            emptyFields.forEach((inputID) => {
+                const field = document.getElementById(inputID);
+
+                if (field) {
+                    field.style.boxShadow = "0 0 10px 2px red";
+                    field.style.borderColor = "red";
+                
+                    field.addEventListener( "input", () => {
+                        if (field.value.trim() === "") {
+                            field.style.boxShadow = "0 0 10px 2px red";
+                            field.style.borderColor = "red";
+                        } else {
+                            field.style.boxShadow = "";
+                            field.style.borderColor = "";
+                        }
+                    });
+
+                }else {
+                    console.warn(`Field with ID ${inputID} not found.`);
+                }                
+            });
+
+            // Scroll to the first empty field
+            const firstField = document.getElementById(emptyFields[0]);
+            if (firstField) {
+                firstField.scrollIntoView({ behavior: "smooth", block: "center" });
+                firstField.focus();
+            }
+
+            return false;
+
+        }else {
+            return true;
+        }
+    }
     
     function generateFeedbacksAndResponses(response_array, feedback_array = [], html_el) {
         for (let i = 0; i < response_array.length; i++) {
@@ -283,23 +345,23 @@ document.addEventListener("DOMContentLoaded", function () {
         return new Promise((resolve, reject) => {
             getUserLocation((key) => {
                 if (key) {
-                    const submissionDataRef = ref(database, `users/${key}/submissions/researchPlan/`);
+                    const submissionDataRef = ref(database, `users/${key}/submissions/researchPlan/responses`);
                     onValue(submissionDataRef, function(snapshot) {
                         const submission = snapshot.val();
     
                         if (submission) {
-                            resolve(true); // Fulfill the promise with `true`
+                            resolve(true);
                         } else {
-                            resolve(false); // Fulfill the promise with `false`
+                            resolve(false);
                         }
                     }, (error) => {
                         console.error('Error reading data:', error);
-                        reject(error); // Reject the promise if there's an error
+                        reject(error);
                     });
                 } else {
                     console.log('No key found for the selected user.');
                     alert("An error has occurred! Please let Ky Duyen know.");
-                    resolve(false); // Resolve as `false` if no key is found
+                    resolve(false);
                 }
             }, nameInput.value);
         });
@@ -310,15 +372,12 @@ document.addEventListener("DOMContentLoaded", function () {
     function displayInfo() {
         getUserLocation((key) => {
             if (key) {
-                const submissionDataRef = ref(database, `users/${key}/submissions/researchPlan`);
+                const submissionDataRef = ref(database, `users/${key}/submissions/researchPlan/info`);
                 onValue(submissionDataRef, function(snapshot) {
-                    console.log("Raw responses:", snapshot.val()?.responses);
-                    const userInfo = snapshot.val()?.info;
-                    // console.log('userResponses: ' + userResponses);
+                    const userInfo = snapshot.val();
     
                     // Loop through the keys and values of the data
                     if (userInfo) {
-                        // console.log('userInfo: ' + userInfo);
                         nameInput.value = userInfo.name;
                         positionInput.value = userInfo.position;
                         projectTitleInput.value = userInfo.projectTitle;

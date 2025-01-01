@@ -486,7 +486,7 @@ export let form_layout = {
                 title: "Additional Comments:",
                 prompts: {
                     0: {
-                        prompt: "Is there anything else you would like to share about your research plan or any additional resources you need to succeed?",
+                        prompt: "Is there anything else you would like to share about your research plan or any additional resources you need to succeed? (Or type N/A)",
                         type_of_inputs: inputTypes.longText,
                         row: 5,
                         col: 80
@@ -528,9 +528,9 @@ export function createForm(prompts, html_el) {
     for (let i = 0; i < prompts.length; i++) {
 
         // Get keys for prompt
-        const sectionKey = prompts[i].sectionKey.slice(-1)
-        const subsectionKey = prompts[i].subsectionKey.slice(-1)
-        const promptKey = prompts[i].promptKey
+        const sectionKey = prompts[i].sectionKey.split('_')[1];
+        const subsectionKey = prompts[i].subsectionKey.split('_')[1];
+        const promptKey = prompts[i].promptKey;
 
         //Create title and subtitle
         if (i == 0) {
