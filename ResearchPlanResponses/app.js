@@ -47,18 +47,30 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 500);
 
         if(!displayDataIsCalled) {
-            getfeedbackStatus().then((status) => {
-                if (status) {
-                    console.log("Submission exists!");
-                    submitButton.style.display = 'none';
-                    displayContainer.innerHTML = `<p>Feedback has already been submitted.</p>`;
-                    displayContainer.style.backgroundColor = 'green';
-                } else {
-                    console.log("No submission found.");
-                    submitButton.style.display = 'block';
-                    displayData();
+            getUserLocation((key) => {
+                if (key) {
+                    const submissionDataRef = ref(database, `users/${key}/submissions/evaluationForm/`);
+                    onValue(submissionDataRef, function(snapshot) {
+                        const submission = snapshot.val();
+                        
+                        getfeedbackStatus().then((status) => {
+                            if (status) {
+                                console.log("Submission exists!");
+                                submitButton.style.display = 'none';
+                                displayContainer.innerHTML += `<p style="background-color: green;"><b>Feedback has already been submitted.</b></p>`;
+                                // displayContainer.style.backgroundColor = 'green';
+
+                                generateFeedbacksAndResponses(submission.responses, submission.feedbacks, displayContainer);
+
+                            } else {
+                                console.log("No submission found.");
+                                submitButton.style.display = 'block';
+                                displayData();
+                            }
+                        });
+                    });
                 }
-            });
+            }, nameInput.value);
         }
     });
 
@@ -208,6 +220,42 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }, nameInput.value);
         });
+    }
+
+    function generateFeedbacksAndResponses(response_array, feedback_array = [], html_el) {
+        for (let i = 0; i < response_array.length; i++) {
+
+            // Create titles
+            if (i === 0 || response_array[i].sectionTitle !== response_array[i - 1]?.sectionTitle) {
+                const sectionTitle = document.createElement("h2");
+                sectionTitle.textContent = response_array[i].sectionTitle;
+                html_el.appendChild(sectionTitle);
+            }
+    
+            if (i === 0 || response_array[i].subsectionTitle !== response_array[i - 1]?.subsectionTitle) {
+                const subsectionTitle = document.createElement("h3");
+                subsectionTitle.textContent = response_array[i].subsectionTitle;
+                html_el.appendChild(subsectionTitle);
+            }
+    
+            // Create prompt and response box
+            const prompt = document.createElement("h5");
+            prompt.textContent = response_array[i].prompt;
+            html_el.appendChild(prompt);
+    
+            //Append user response
+            const responseBox = document.createElement("div");
+            responseBox.classList.add("response-box");
+            responseBox.textContent = response_array[i].response ? `Response: ${response_array[i].response}` : "No response provided.";
+            html_el.appendChild(responseBox);
+
+            // Append feedbacks, with a safe fallback if feedback_array is undefined or shorter than response_array
+            const feedback = feedback_array[i]?.feedback || "No feedback provided.";
+            const feedbackBox = document.createElement("div");
+            feedbackBox.classList.add("feedback-box");
+            feedbackBox.textContent = `Feedback: ${feedback}`;
+            html_el.appendChild(feedbackBox);
+        }
     }
 
 
