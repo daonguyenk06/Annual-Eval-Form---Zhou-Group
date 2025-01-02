@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     } else {
                         console.log('No info found for the selected user.');
                         submitButton.style.display = 'none';
-                        displayContainer.innerHTML = `<p>No data available for the selected user.</p>`;
+                        displayContainer.innerHTML += `<p>This user has not yet submit a response.</p>`;
                     }
                 });
             } else {
