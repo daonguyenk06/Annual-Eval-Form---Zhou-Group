@@ -72,6 +72,19 @@ loginButton.addEventListener('click', function(){
     }, nameInput.value);
 });
 
+
+nameInput.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+        loginButton.click(); // Trigger the button click when "Enter" is pressed
+    }
+});
+
+passInput.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+        loginButton.click(); // Trigger the button click when "Enter" is pressed
+    }
+});
+
 //Listen for if showPassword checkbox is checked
 showPassword.addEventListener('change', function(event) {
     if (event.target.checked) {
