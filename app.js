@@ -43,10 +43,10 @@ function createMemberMenu() {
     memberMenuHeading.innerHTML = "<u>Forms</u>";
     memberMenu.appendChild(memberMenuHeading);
 
-    const memberMenuLink1 = document.createElement("a");
-    memberMenuLink1.href = "/EvaluationForm/index.html";
-    memberMenuLink1.textContent = "Annual Evaluation Form";
-    memberMenu.appendChild(memberMenuLink1);
+    // const memberMenuLink1 = document.createElement("a");
+    // memberMenuLink1.href = "/EvaluationForm/index.html";
+    // memberMenuLink1.textContent = "Annual Evaluation Form";
+    // memberMenu.appendChild(memberMenuLink1);
 
     const memberMenuLink2 = document.createElement("a");
     memberMenuLink2.href = "/ResearchPlanForm/index.html";

@@ -49,8 +49,8 @@ loginButton.addEventListener('click', function(){
                
                 onValue(authRef, function(snapshot) {
                     const password = snapshot.val()?.password;
-                    console.log(password);
-                    console.log(typeof password);
+                    // console.log(password);
+                    // console.log(typeof password);
 
                     if(nameInput.value && passInput.value) {
                         if(passInput.value == password) {
