@@ -1,6 +1,6 @@
 //Firebase imports
-import { database } from "./firebaseConfig.js";
-import { getDatabase, ref, push, onValue, update, set, remove, child} from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
+// import { database } from "./firebaseConfig.js";
+// import { getDatabase, ref, push, onValue, update, set, remove, child} from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
 
 //**By wrapping the code inside the DOMContentLoaded event listener, you ensure that the code will only run when the DOM is ready.
 document.addEventListener("DOMContentLoaded", function () {
@@ -19,15 +19,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const permissionLevel = localStorage.getItem('permission') ?? null;
 
         if (name_local) {
+            menuContainer.innerHTML = '';
             console.log('User:', name_local);
             welcomeLine.textContent = `Welcome, ${name_local}`;
             loginLink.textContent = 'Switch User';
         } else {
             console.warn('No user data found in localStorage for "name".');
-            window.location.href = "login.html";
         }
 
         if (permissionLevel) {
+            menuContainer.innerHTML = '';
+
             if (permissionLevel === 'admin') {
                 menuContainer.appendChild(createMemberMenu());
                 menuContainer.appendChild(createAdminMenu());
