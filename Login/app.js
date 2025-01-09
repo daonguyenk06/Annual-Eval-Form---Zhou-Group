@@ -4,7 +4,6 @@ import { ref, query, orderByChild, equalTo, push, onValue, update, set, remove, 
 
 //Users and authentication
 const usersRef = ref(database, "users");
-const authRef = ref(database, "auth");
 
 //Buttons
 const loginButton = document.getElementById("loginButton");
@@ -39,83 +38,32 @@ onValue(usersRef, function(snapshot) {
 });
 
 
-nameInput.addEventListener('change', function () {
-    // Reset password field visibility initially
-    passwordClass.forEach((element) => {
-        element.style.display = 'none';
-    });
-
-    const selectedName = nameInput.value;
-    if (!selectedName) {
-        console.log('No name selected.');
-        return;
-    }
-
-    // Fetch the user location based on the selected name
-    getUserLocation((key) => {
-        if (key) {
-            // console.log('Returned key:', key);
-
-            // Fetch permission for the selected user
-            getPermission(key, (permission) => {
-                if (permission) {
-                    // console.log('Returned permission:', permission);
-
-                    // Handle permission levels
-                    if (permission === 'admin') {
-                        passwordClass.forEach((element) => {
-                            element.style.display = 'block';
-                        });
-                    } else if (permission === 'member') {
-                        null;
-                    } else {
-                        alert('Permission not defined for this user.');
-                        nameInput.value = null;
-                    }
-                } else {
-                    console.log('No permission found.');
-                }
-            });
-        } else {
-            console.log('No key found for the selected user.');
-            alert("An error has occured!!!\n\nPlease let Ky Duyen know via email:\nkyduyen.daonguyen@mines.sdsmt.edu \n\nThanks!");
-        }
-    }, nameInput.value);
-});
-
-
 loginButton.addEventListener('click', function(){
     getUserLocation((key) => {
         if (key) {
             // console.log('Returned key:', key);
+            const authRef = ref(database, `users/${key}/auth`)
 
             // Fetch permission for the selected user
             getPermission(key, (permission) => {
-                if (permission == 'admin') {
-                    //Set user status to admin
-                    onValue(authRef, function(snapshot) {
-                        const auth = snapshot.val();
-                        // console.log(auth.password);
-                        // console.log(typeof auth.password);
+               
+                onValue(authRef, function(snapshot) {
+                    const password = snapshot.val()?.password;
+                    console.log(password);
+                    console.log(typeof password);
 
-                        if(nameInput.value && passInput.value) {
-                            if(passInput.value == auth.password) {
-                                login(permission);
-                            }else{
-                                clearUserStatus();
-                                alert('Wrong password. Please try again!');
-                            }
-                        }else {
-                            alert('Invalid name or password. Please try again!');
+                    if(nameInput.value && passInput.value) {
+                        if(passInput.value == password) {
+                            login(permission);
+                        }else{
+                            clearUserStatus();
+                            alert('Wrong password. Please try again!');
                         }
-                    });
-                }else if (permission == 'member') {
-                    login(permission);
-                }else {
-                    console.log("Permission not found.")
-                    clearUserStatus();
-                    alert("An error has occured!!!\n\nPlease let Ky Duyen know via email:\nkyduyen.daonguyen@mines.sdsmt.edu \n\nThanks!");
-                }
+                    }else {
+                        alert('Invalid name or password. Please try again!');
+                    }
+                });
+                
             });
         } else {
             console.log('No key found for the selected user.');
