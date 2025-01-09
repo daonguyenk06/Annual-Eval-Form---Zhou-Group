@@ -92,7 +92,6 @@ function login(permission) {
     }, 600);
 }
 
-
 function getUserLocation(callback, name) {
     const nameQuery = query(usersRef, orderByChild('name'), equalTo(name));
     onValue(nameQuery, (snapshot) => {

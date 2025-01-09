@@ -11,25 +11,38 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginLink = document.getElementById("login-link");
     const menuContainer = document.getElementById("menu-container");
   
-    //Get login status
-    const name_local = localStorage.getItem('name');
-    const permissionLevel = localStorage.getItem('permission');
+    // Check if localStorage exists
+    if (typeof window.localStorage !== "undefined") {
+        
+        //Get login status
+        const name_local = localStorage.getItem('name') ?? null;
+        const permissionLevel = localStorage.getItem('permission') ?? null;
 
-    if (name_local) {
-        console.log('User:', name_local);
-        welcomeLine.textContent = `Welcome, ${name_local}`;
-        loginLink.textContent = 'Switch User'
+        if (name_local) {
+            console.log('User:', name_local);
+            welcomeLine.textContent = `Welcome, ${name_local}`;
+            loginLink.textContent = 'Switch User';
+        } else {
+            console.warn('No user data found in localStorage for "name".');
+            window.location.href = "login.html";
+        }
+
+        if (permissionLevel) {
+            if (permissionLevel === 'admin') {
+                menuContainer.appendChild(createMemberMenu());
+                menuContainer.appendChild(createAdminMenu());
+            } else if (permissionLevel === 'member') {
+                menuContainer.appendChild(createMemberMenu());
+            } else {
+                console.warn('Unexpected permission level:', permissionLevel);
+            }
+        } else {
+            console.warn('No permission level found in localStorage.');
+        }
     } else {
-        console.warn('No user data found in localStorage.');
-        window.location.href = "login.html";
+        console.error('localStorage is not supported in this browser.');
     }
-    
-    if(permissionLevel == 'admin') {
-        menuContainer.appendChild(createMemberMenu());
-        menuContainer.appendChild(createAdminMenu());
-    }else if(permissionLevel == 'member') {
-        menuContainer.appendChild(createMemberMenu());
-    }
+
 });
 
 
